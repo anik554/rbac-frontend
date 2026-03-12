@@ -14,7 +14,6 @@ export default function ReportsPage() {
     queryKey: ['reports-summary'],
     queryFn: () => reportsApi.summary().then((r) => r.data.data),
   });
-
   return (
     <AuthGuard requiredPermission={PERMISSION_ATOMS.REPORTS_VIEW}>
       <div className="space-y-6">
@@ -35,13 +34,13 @@ export default function ReportsPage() {
                   <h3 className="text-base font-semibold text-white">Leads by Status</h3>
                 </div>
                 <ResponsiveContainer width="100%" height={220}>
-                  <BarChart data={(data?.leads?.byStatus || []).map((d: any) => ({ name: d.status, count: parseInt(d.count) }))} barSize={36}>
+                  <BarChart data={(data?.data?.leads?.byStatus || []).map((d: any) => ({ name: d.status, count: parseInt(d.count) }))} barSize={36}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                     <XAxis dataKey="name" tick={{ fill: '#64748B', fontSize: 12 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: '#64748B', fontSize: 12 }} axisLine={false} tickLine={false} />
                     <Tooltip contentStyle={{ background: 'var(--surface-2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} cursor={{ fill: 'rgba(99,102,241,0.05)' }} />
                     <Bar dataKey="count" radius={[6,6,0,0]}>
-                      {(data?.leads?.byStatus || []).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                      {(data?.data?.leads?.byStatus || []).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -56,10 +55,10 @@ export default function ReportsPage() {
                 <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie
-                      data={(data?.tasks?.byStatus || []).map((d: any) => ({ name: d.status.replace('_',' '), value: parseInt(d.count) }))}
+                      data={(data?.data?.tasks?.byStatus || []).map((d: any) => ({ name: d.status.replace('_',' '), value: parseInt(d.count) }))}
                       cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value"
                     >
-                      {(data?.tasks?.byStatus || []).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                      {(data?.data?.tasks?.byStatus || []).map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                     </Pie>
                     <Tooltip contentStyle={{ background: 'var(--surface-2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
                     <Legend formatter={(v) => <span style={{ color: '#94A3B8', fontSize: 12 }}>{v}</span>} />
@@ -75,7 +74,7 @@ export default function ReportsPage() {
                 <h3 className="text-base font-semibold text-white">Top Agents by Leads</h3>
               </div>
               <div className="space-y-3">
-                {(data?.topAgents || []).map((agent: any, i: number) => (
+                {(data?.data?.topAgents || []).map((agent: any, i: number) => (
                   <div key={agent.agentId} className="flex items-center gap-4">
                     <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-amber-500/20 text-amber-300' : i === 1 ? 'bg-slate-500/20 text-slate-300' : 'bg-orange-500/20 text-orange-300'}`}>
                       #{i + 1}
@@ -92,7 +91,7 @@ export default function ReportsPage() {
                     </div>
                   </div>
                 ))}
-                {(!data?.topAgents || data.topAgents.length === 0) && (
+                {(!data?.data?.topAgents || data?.data?.topAgents.length === 0) && (
                   <p className="text-sm text-slate-500 text-center py-8">No data available</p>
                 )}
               </div>
